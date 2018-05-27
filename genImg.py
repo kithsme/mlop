@@ -9,7 +9,7 @@ import networkx as nx
 import numpy as np
 from PIL import Image
 from tqdm import tqdm
-
+import os
 
 class Background:
 
@@ -102,7 +102,25 @@ class PairImage:
         self.x = np.asarray(img)[:,:,:-1]
         self.y = 1 - p.type[0]
 
-        
+def prepareLearningXYsFromFiles(positive_dir, negative_dir):
+
+    xys = []
+
+    for file in tqdm(os.listdir(positive_dir),desc='Positive Instances '):
+        if file.endswith(".png"):
+            img = Image.open(file)
+            x = np.asarray(img)[:,:,:-1]
+            y = 1
+            xys.append((x,y))
+    
+    for file in tqdm(os.listdir(negative_dir),desc='Negative Instances '):
+        if file.endswith(".png"):
+            img = Image.open(file)
+            x = np.asarray(img)[:,:,:-1]
+            y = 0
+            xys.append((x,y))
+
+    return xys
 
 def prepareLearningXYs():
     
