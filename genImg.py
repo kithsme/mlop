@@ -103,7 +103,7 @@ class PairImage:
         self.y = 1 - p.type[0]
 
 def prepareLearningXYsFromFiles(positive_dir, negative_dir):
-
+    """ get xy instances from png file already created """
     xys = []
 
     for file in tqdm(os.listdir(positive_dir),desc='Positive Instances '):
