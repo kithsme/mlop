@@ -28,7 +28,7 @@ def parseDate(dtstr):
     
     
 def lonlatDist(lon1, lat1, lon2, lat2):
-    # return km
+    """ return km """
     R = 6371
     radLon1 = math.radians(lon1)
     radLat1 = math.radians(lat1)
@@ -44,7 +44,8 @@ def getTime(x):
     return 3600*x.hour + 60*x.minute + x.second
 
 def getTimeSlot(x, mins=20):
-    stime = 37800 # 10:30
+    """ start from AM 10:30 (=37800 sec) """
+    stime = 37800 
     # etime = 81000 # 22:30
     t = getTime(x)
     return (t - stime) // (mins*60)
@@ -84,7 +85,7 @@ def approximate(p, connected_comps):
         
 
 def getTrackDist(x):
-    # getTrackTimeDelta should be called before this
+    """ getTrackTimeDelta should be called before this """
     if 0.0 < x['TimeDelta'] :
         return lonlatDist(x['Lon.'],x['Lat.'],x['Lon.-1'],x['Lat.-1'])
     else:
