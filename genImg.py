@@ -80,8 +80,6 @@ class PairImage:
         ashortest1 = nx.shortest_path(G, indd1, indp2)
         ashortest2 = nx.shortest_path(G, indp2, indd2)
 
-    
-
         zz = [utils.mapItOn(z, bg.map_df) for z in ashortest]
         zz = np.asarray(zz)
         zz1 = [utils.mapItOn(z, bg.map_df) for z in ashortest1]
@@ -92,11 +90,10 @@ class PairImage:
         zp1 = bg.background.axes[0].plot(zz[:,0], zz[:,1], lw=20, c=color[0], alpha=1)
         zp2 = bg.background.axes[0].plot(zz1[:,0], zz1[:,1], lw=20, c=color[1],alpha=1)
         zp3 = bg.background.axes[0].plot(zz2[:,0], zz2[:,1], lw=20, c=color[2],alpha=1)
-
         
         bg.background.savefig('out.png', bbox_inches='tight', pad_inches=0)
         img = Image.open('out.png')
-        img = img.resize((64, 64), Image.ANTIALIAS) # resizes image in-place
+        img = img.resize((prm.step, prm.step), Image.ANTIALIAS) # resizes image in-place
         
         bg.background.axes[0].lines.pop(0)
         bg.background.axes[0].lines.pop(0)
@@ -156,11 +153,11 @@ def prepareLearningXYs():
     gg = Background()
     xys = []
 
-    for s in tqdm(strong_good,desc='Strong Good '):
+    for s in tqdm(strong_good,desc='Positive Instances '):
         pair = PairImage(s, gg)
         xys.append((pair.x, pair.y))
     
-    for s in tqdm(strong_bad,desc='Strong Bad '):
+    for s in tqdm(strong_bad,desc='Negative Instances '):
         pair = PairImage(s, gg)
         xys.append((pair.x, pair.y))
     print('Generating Image for Learning Completed!')
