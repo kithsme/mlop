@@ -108,14 +108,14 @@ def prepareLearningXYsFromFiles(positive_dir, negative_dir):
 
     for file in tqdm(os.listdir(positive_dir),desc='Positive Instances '):
         if file.endswith(".png"):
-            img = Image.open(file)
+            img = Image.open(positive_dir+'/'+file)
             x = np.asarray(img)[:,:,:-1]
             y = 1
             xys.append((x,y))
     
     for file in tqdm(os.listdir(negative_dir),desc='Negative Instances '):
         if file.endswith(".png"):
-            img = Image.open(file)
+            img = Image.open(negative_dir+'/'+file)
             x = np.asarray(img)[:,:,:-1]
             y = 0
             xys.append((x,y))
