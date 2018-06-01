@@ -55,45 +55,35 @@ class TA:
 
         dftr2['xInd'] = dftr2['Lon.'].apply(lambda x : utils.toInd(x, prm.lonMin, prm.lonTick))
         dftr2['yInd'] = dftr2['Lat.'].apply(lambda x : utils.toInd(x, prm.latMin, prm.latTick))
+        dftr2['x-1Ind'] = dftr2['Lon.-1'].apply(lambda x : utils.toInd(x, prm.lonMin, prm.lonTick))
+        dftr2['y-1Ind'] = dftr2['Lat.-1'].apply(lambda x : utils.toInd(x, prm.latMin, prm.latTick))
 
-        transDic = {}
+        dftr2['IndDiff'] = dftr2.apply(lambda x: abs(x['xInd']-x['x-1Ind']) + abs(x['yInd']-x['y-1Ind']), axis=1)
 
-        total_len = len(dftr2.index)
+        dftr3 = dftr2[dftr2['IndDiff'] > 0]
 
-        for i in range(total_len-1):
-            
-            row = dftr2.iloc[i]
-            tup = (row['xInd'], row['yInd'])
-            
-            nextRow = dftr2.iloc[i+1]
-            tupNext = (nextRow['xInd'], nextRow['yInd'])
-            
-            absdiff = abs(tup[0]-tupNext[0]) + abs(tup[1]-tupNext[1])
-            
-            if absdiff < prm.step/8 and absdiff > 0:
-            
-                try:
-                    s = transDic[tup]
-                    s.add(tupNext)
-                    transDic[tup] = s
-                except:
+        dftr3 = dftr3[dftr3['IndDiff'] <= prm.step/16]
 
-                    s = set()
-                    s.add(tupNext)
-                    transDic[tup] = s
-            
-        G = nx.Graph()
-        G.add_nodes_from([key for key in transDic])
+        dftr4 = dftr3.groupby(['x-1Ind','y-1Ind','xInd','yInd','IndDiff']).mean()
 
-        for key in transDic:
-            
-            ss = transDic[key]
-            
-            for s in ss:
-                G.add_edge(key, s)
+        dftr4 = dftr4['Speed']
 
-        # g_con = list(nx.connected_components(G))
+        dftr4 = dftr4.reset_index()
+
+        diTransList = []
+
+        for i, row in dftr4.iterrows():
+            
+            fromNode = (int(row['x-1Ind']), int(row['y-1Ind']))
+            toNode = (int(row['xInd']), int(row['yInd']))
+            dist = row['IndDiff']/row['Speed']
+            diTransList.append((fromNode, toNode, dist))
+            
+        DG = nx.DiGraph()
+        DG.add_weighted_edges_from(diTransList)
 
         self.track_df = dftr2
-        self.network = G
+        self.network = DG
+
+
 
