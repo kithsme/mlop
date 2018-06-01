@@ -25,7 +25,7 @@ class OA:
         df['CatchDelay'] = (df['CatchTS'] - df['UpTS']).apply(lambda x: x.seconds)
         df['PickupTravelTime'] = (df['PickUpTS'] - df['CatchTS']).apply(lambda x: x.seconds)
         df['DeliverTravelTime'] = (df['DeliverTS'] - df['PickUpTS']).apply(lambda x: x.seconds)
-
+        df['TotalTravelTime'] = (df['DeliverTS'] - df['CatchTS']).apply(lambda x: x.seconds)
         df['p-dDistance'] = df.apply(lambda x: utils.lonlatDist(x['pLon'],x['pLat'],x['dLon'],x['dLat']), axis=1)
 
         df['TimeSlot1'] = df['UpTS'].apply(lambda x: utils.getTimeSlot(x, prm.MINS))
