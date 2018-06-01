@@ -118,7 +118,7 @@ def isWeak(r1, r2):
 
 def onTime(r):
     
-    if (r['DeliverTS'] - r['CatchTS']).seconds > 45. * 60.:
+    if (r['DeliverTS'] - r['PickUpTS']).seconds > 30. * 60.:
         return False
     else:
         return True
