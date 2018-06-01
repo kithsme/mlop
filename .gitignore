@@ -1,2 +1,6 @@
+/pos
+/neg
+/30
+*.txt
 test.py
 *.csv
